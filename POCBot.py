@@ -7,6 +7,8 @@ from flask import Flask, redirect, request
 import asyncio
 import time
 import os
+
+from bellman_manager import Bellman
 from command_manager import CommandManager
 
 APP_ID = os.environ.get("Twitch_Client_ID")
@@ -25,8 +27,11 @@ class ScreepBot:
     chat: Chat
 
     def __init__(self) -> None:
-        self.CommandManager = None
         self.await_login = True
+
+        self.CommandManager = None
+        self.Bellman = None
+
 
     # this will be called when the event READY is triggered, which will be on bot start
     async def on_ready(self, ready_event: EventData):
@@ -39,6 +44,7 @@ class ScreepBot:
     # this will be called whenever a message in a channel was send by either the bot OR another user
     async def on_message(self, msg: ChatMessage):
         print(f'in {msg.room.name}, {msg.user.name} said: {msg.text}')
+        await self.Bellman.increment()
 
     # this will be called whenever someone subscribes to a channel
     async def on_sub(self, sub: ChatSub):
@@ -73,6 +79,9 @@ class ScreepBot:
         # register all available commands
         self.CommandManager = CommandManager(self.chat)
         self.CommandManager.register_commands()
+
+        # register bellman
+        self.Bellman = Bellman(self.chat, TARGET_CHANNEL)
 
         # we are done with our setup, lets start this bot up!
         self.chat.start()
