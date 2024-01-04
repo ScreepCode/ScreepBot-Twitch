@@ -1,0 +1,21 @@
+{
+  "discord": {
+    "server-name": "DISCORD_SERVER_NAME",
+    "invite-link": "DISCORD_SERVER_LINK"
+  },
+  "prime": {
+    "text": "PRIME_ANNOUNCEMENT"
+  },
+  "stream-plan": {
+    "text": "STREAM_PLAN"
+  },
+  "support": {
+    "text": "TEXT_WITH_PLACEHOLDERS",
+    "link": "SUPPORT_LINK"
+  },
+  "project": {
+    "text": "DESCRIPTION_OF_PROJECT",
+    "link": "PROJECT_SITE",
+    "link-text": "PROJECT_INTRO_TEXT"
+  }
+}

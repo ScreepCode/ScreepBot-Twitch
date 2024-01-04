@@ -10,7 +10,12 @@ class CommandManager(object):
         self.chat: Chat = chat
         self.commandsModules: list = [
             [["hi", "hello", "hallo"], libs.cmds.hello_command],
-            [["echo", "reply"], libs.cmds.echo_command]
+            [["echo", "reply"], libs.cmds.echo_command],
+            [["dc", "discord"], libs.cmds.discord_command],
+            [["prime", "twitchprime", "primegaming"], libs.cmds.prime_command],
+            [["projekt", "project"], libs.cmds.project_command],
+            [["streamplan", "schedule"], libs.cmds.stream_plan_command],
+            [["support", "spende", "tip"], libs.cmds.support_command]
         ]
 
     def register_commands(self):
