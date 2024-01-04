@@ -7,6 +7,7 @@ from flask import Flask, redirect, request
 import asyncio
 import time
 import os
+from command_manager import CommandManager
 
 APP_ID = os.environ.get("Twitch_Client_ID")
 APP_SECRET = os.environ.get("Twitch_Secret")
@@ -24,6 +25,7 @@ class ScreepBot:
     chat: Chat
 
     def __init__(self) -> None:
+        self.CommandManager = None
         self.await_login = True
 
     # this will be called when the event READY is triggered, which will be on bot start
@@ -43,17 +45,6 @@ class ScreepBot:
         print(f'New subscription in {sub.room.name}:\n'
               f'  Type: {sub.sub_plan}\n'
               f'  Message: {sub.sub_message}')
-
-    # this will be called whenever the !reply command is issued
-    async def reply_command(self, cmd: ChatCommand):
-        if len(cmd.parameter) == 0:
-            await cmd.reply('you did not tell me what to reply with')
-        else:
-            await cmd.reply(f'{cmd.user.name}: {cmd.parameter}')
-
-    # this will be called whenever the !hello command is issued
-    async def hello_command(self, cmd: ChatCommand):
-        await self.chat.send_message(TARGET_CHANNEL, f'Hello World! from {cmd.user.name}')
 
     # this is where we set up the bot
     async def run(self):
@@ -79,9 +70,9 @@ class ScreepBot:
         self.chat.register_event(ChatEvent.SUB, self.on_sub)
         # there are more events, you can view them all in this documentation
 
-        # you can directly register commands and their handlers, this will register the !reply command
-        self.chat.register_command('reply', self.reply_command)
-        self.chat.register_command('hello', self.hello_command)
+        # register all available commands
+        self.CommandManager = CommandManager(self.chat)
+        self.CommandManager.register_commands()
 
         # we are done with our setup, lets start this bot up!
         self.chat.start()
@@ -125,7 +116,7 @@ async def login_confirm():
 
 
 def main():
-    app.run('0.0.0.0')
+    app.run('0.0.0.0', 5000)
     # lets run our setup
 
 
